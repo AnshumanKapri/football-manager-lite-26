@@ -5,6 +5,7 @@ import cors from 'cors';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,11 +16,31 @@ app.use(express.json());
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
-  const clientDistPath = path.join(__dirname, '../../client/dist');
-  app.use(express.static(clientDistPath));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(clientDistPath, 'index.html'));
-  });
+  // In production, server runs from project root
+  const possiblePaths = [
+    path.join(__dirname, '../client/dist'),
+    path.join(__dirname, 'client/dist'),
+    path.join(process.cwd(), 'client/dist'),
+    path.join(__dirname, '../../client/dist')
+  ];
+  
+  let clientDistPath = null;
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      clientDistPath = p;
+      break;
+    }
+  }
+  
+  if (clientDistPath) {
+    console.log('✅ Serving client from:', clientDistPath);
+    app.use(express.static(clientDistPath));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(clientDistPath, 'index.html'));
+    });
+  } else {
+    console.warn('⚠️ Client dist not found. Serving API only.');
+  }
 }
 
 const httpServer = createServer(app);

@@ -5,7 +5,7 @@ import { useGameStore } from '../store/gameStore';
 import { TEAMS } from '../data/leagues';
 import Sidebar from '../components/Sidebar';
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || window.location.origin || 'http://localhost:3001';
+const SERVER_URL = import.meta.env.VITE_SERVER_URL === '/' ? window.location.origin : (import.meta.env.VITE_SERVER_URL || 'http://localhost:3001');
 
 function MultiplayerLobby() {
   const navigate = useNavigate();
