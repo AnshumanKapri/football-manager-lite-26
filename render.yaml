@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: fm-lite-26
+    env: node
+    region: oregon
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: NODE_ENV=production node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
