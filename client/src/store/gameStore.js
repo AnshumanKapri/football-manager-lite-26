@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { TEAMS } from './data/leagues';
-import { PLAYERS } from './data/players';
+import { TEAMS } from '../data/leagues';
+import { PLAYERS } from '../data/players';
 
 export const useGameStore = create((set, get) => ({
   // User state
